@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useReducer} from "react";
 import EditForm from "./EditForm";
 import "./UsersTable.css";
 
@@ -16,7 +16,7 @@ function UsersTable(props) {
             .catch((err) => {
                 console.log(err.message);
             });
-    }, [props.url]);
+    }, [props.url, overlayHidden]);
 
     function open_form(user_entry) {
         setOverlayHidden(false);

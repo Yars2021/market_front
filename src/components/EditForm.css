@@ -32,6 +32,9 @@
 }
 
 .form_label {
+    padding-top: 5px;
+    padding-left: 2px;
+    border: 1px solid lightgray;
     width: 30%;
 }
 

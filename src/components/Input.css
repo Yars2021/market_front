@@ -5,4 +5,7 @@
 .form_input {
     font-size: 0.5cm;
     height: 0.75cm;
+    width: 100%;
+    border: 1px solid lightgray;
+    border-radius: 1px;
 }

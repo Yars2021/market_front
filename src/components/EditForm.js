@@ -1,14 +1,21 @@
-import {useState, useCallback} from "react";
+import {useState, useCallback, useEffect} from "react";
 import "./EditForm.css";
 import Input from "./Input";
 
 function EditForm(props) {
-    const [name, setName] = useState(props.user ? props.user["name"] : "placeholder");
-    const [balance, setBalance] = useState(props.user ? props.user["balance"] : 0);
-    const [repS, setRepS] = useState(props.user ? props.user["reputationSeller"] : 0);
-    const [repB, setRepB] = useState(props.user ? props.user["reputationBuyer"] : 0);
+    const [name, setName] = useState("placeholder");
+    const [balance, setBalance] = useState(0);
+    const [repS, setRepS] = useState(0);
+    const [repB, setRepB] = useState(0);
 
-    const submit_fields = useCallback(async () => {
+    useEffect(() => {
+        setName(props.user ? props.user["name"] : "placeholder");
+        setBalance(props.user ? props.user["balance"] : 0);
+        setRepS(props.user ? props.user["reputationSeller"] : 0);
+        setRepB(props.user ? props.user["reputationBuyer"] : 0);
+    }, [props.user]);
+
+    const submit_user = useCallback(async () => {
         await fetch(props.url + "/" + props.user["login"], {
             method: "PUT",
             headers: {
@@ -27,6 +34,16 @@ function EditForm(props) {
 
         props.onExit();
     }, [props, name, balance, repS, repB]);
+
+    const delete_user = useCallback(async () => {
+        await fetch(props.url + "/" + props.user["login"], {
+            method: "DELETE",
+        }).catch((err) => {
+            console.log(err.message);
+        });
+
+        props.onExit();
+    }, [props]);
 
     return (
         <div className={"overlay"} hidden={props.hidden}>
@@ -66,8 +83,8 @@ function EditForm(props) {
                         </div>
                         <div className={"form_row"}>
                             <div className={"cancel_button"} onClick={props.onExit}>Cancel changes</div>
-                            <div className={"submit_button"} onClick={submit_fields}>Save user data</div>
-                            <div className={"delete_button"} onClick={props.onExit}>Delete user</div>
+                            <div className={"submit_button"} onClick={submit_user}>Save user data</div>
+                            <div className={"delete_button"} onClick={delete_user}>Delete user</div>
                         </div>
                     </div>
                 </div>
