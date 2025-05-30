@@ -1,0 +1,38 @@
+.table {
+    display: flex;
+    flex-flow: column;
+    font-size: 0.5cm;
+    border: 1px solid black;
+    border-right: none;
+    width: 100%;
+}
+
+.table_header_row {
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+}
+
+.table_row {
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    border-top: 1px solid black;
+}
+
+.table_header {
+    background: #F2F8F8;
+    font-weight: bold;
+    width: 20%;
+    min-width: 15%;
+    padding: 0.15cm;
+    border-right: 1px solid black;
+}
+
+.table_data {
+    font-weight: normal;
+    width: 20%;
+    min-width: 15%;
+    padding: 0.15cm;
+    border-right: 1px solid black;
+}

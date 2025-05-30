@@ -1,0 +1,81 @@
+.overlay {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFFDD;
+}
+
+.form_container {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    padding-top: 5%;
+}
+
+.edit_form {
+    display: flex;
+    flex-flow: column;
+    background: #FEFEFE;
+    width: 60%;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+}
+
+.form_row {
+    margin-bottom: 20px;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-evenly;
+}
+
+.form_label {
+    width: 30%;
+}
+
+.cancel_button {
+    color: white;
+    background: #AAAAAA;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 10%;
+    width: 20%;
+    text-align: center;
+}
+
+.submit_button {
+    color: white;
+    background: #55AAFF;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 10%;
+    width: 20%;
+    text-align: center;
+}
+
+.delete_button {
+    color: white;
+    background: #FF0055;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 10%;
+    width: 20%;
+    text-align: center;
+}
+
+.cancel_button:hover {
+    background: #888888;
+    cursor: pointer;
+}
+
+.submit_button:hover {
+    background: #1177AA;
+    cursor: pointer;
+}
+
+.delete_button:hover {
+    background: #AA0011;
+    cursor: pointer;
+}
