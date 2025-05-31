@@ -8,6 +8,13 @@ function EditForm(props) {
     const [repS, setRepS] = useState(0);
     const [repB, setRepB] = useState(0);
 
+    const form_entries = [
+        ["name", "Full Name", (output) => {setName(output)}],
+        ["balance", "Balance", (output) => {setBalance(output)}],
+        ["reputationSeller", "Salesman reputation", (output) => {setRepS(output)}],
+        ["reputationBuyer", "Buyer reputation", (output) => {setRepB(output)}],
+    ];
+
     useEffect(() => {
         setName(props.user ? props.user["name"] : "placeholder");
         setBalance(props.user ? props.user["balance"] : 0);
@@ -53,34 +60,12 @@ function EditForm(props) {
                         <div className={"form_row"}>
                             <h2>{"Editing " + props.user["login"]}</h2>
                         </div>
-                        <div className={"form_row"}>
-                            <div className={"form_label"}>Full Name</div>
-                            <Input
-                                initial={props.user["name"]}
-                                outputSetter={(output) => {setName(output)}}
-                            />
-                        </div>
-                        <div className={"form_row"}>
-                            <div className={"form_label"}>Balance</div>
-                            <Input
-                                initial={props.user["balance"]}
-                                outputSetter={(output) => {setBalance(output)}}
-                            />
-                        </div>
-                        <div className={"form_row"}>
-                            <div className={"form_label"}>Salesman reputation</div>
-                            <Input
-                                initial={props.user["reputationSeller"]}
-                                outputSetter={(output) => {setRepS(output)}}
-                            />
-                        </div>
-                        <div className={"form_row"}>
-                            <div className={"form_label"}>Buyer reputation</div>
-                            <Input
-                                initial={props.user["reputationBuyer"]}
-                                outputSetter={(output) => {setRepB(output)}}
-                            />
-                        </div>
+                        {form_entries.map(([key, text, linked_state]) => {return (
+                            <div key={"edit_form_" + key} className={"form_row"}>
+                                <div className={"form_label"}>{text}</div>
+                                <Input initial={props.user[key]} outputSetter={linked_state}/>
+                            </div>
+                        )})}
                         <div className={"form_row"}>
                             <div className={"cancel_button"} onClick={props.onExit}>Cancel changes</div>
                             <div className={"submit_button"} onClick={submit_user}>Save user data</div>
