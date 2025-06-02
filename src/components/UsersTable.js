@@ -4,7 +4,7 @@ import "./UsersTable.css";
 import AddForm from "./AddForm";
 
 function UsersTable(props) {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState(props.initialTable);
     const [overlayHidden, setOverlayHidden] = useState(true);
     const [userToEdit, setUserToEdit] = useState(undefined);
     const [refresh, setRefresh] = useState(true);
@@ -17,17 +17,13 @@ function UsersTable(props) {
             })
             .catch((err) => {
                 console.log(err.message);
+                props.errHandler();
             });
-    }, [props.url, overlayHidden, refresh]);
+    }, [props, props.url, overlayHidden, refresh]);
 
-    function _open_edit_form(user_entry) {
+    const _open_edit_form = (user_entry) => {
         setOverlayHidden(false);
         setUserToEdit(user_entry);
-    }
-
-    function _exit_edit_form() {
-        setUserToEdit(undefined);
-        setOverlayHidden(true);
     }
 
     return (
@@ -44,7 +40,10 @@ function UsersTable(props) {
                         url={props.url}
                         hidden={overlayHidden}
                         user={userToEdit}
-                        onExit={() => _exit_edit_form()}
+                        onExit={() => {
+                            setUserToEdit(undefined);
+                            setOverlayHidden(true);
+                        }}
                     />
 
                     <div className={"table_header_row"}>

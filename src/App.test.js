@@ -83,7 +83,7 @@ describe("Component tests", () => {
         expect(submit_indicator).toBe(0);
     });
 
-    test("EditForm rendered successfully", () => {
+    test("EditForm tested successfully", () => {
         let exit_indicator = 0;
 
         const form_entries = ["Full Name", "Balance", "Salesman reputation", "Buyer reputation"];
@@ -131,18 +131,35 @@ describe("Component tests", () => {
         for (let i = 0; i < 3; i++) {
             expect(form_rows[5].childNodes[i].className).toBe(button_entries[i][0]);
             expect(form_rows[5].childNodes[i].textContent).toBe(button_entries[i][1]);
+
             fireEvent.click(form_rows[5].childNodes[i]);
         }
 
         expect(exit_indicator).toBe(1);
     });
 
-    test("UsersTable rendered successfully", () => {
+    test("UsersTable tested successfully", () => {
+        let err_indicator = 0;
+
         const form_entries = ["Login", "Password", "Full Name", "Balance", "Salesman reputation", "Buyer reputation"];
+
+        expect(err_indicator).toBe(0);
 
         const { container } = render(<div><UsersTable
             url={"url_value"}
+            initialTable={[
+                {
+                    "login": "test",
+                    "name": "Name A",
+                    "balance": 12367,
+                    "reputationSeller": 50,
+                    "reputationBuyer": 10
+                }
+            ]}
+            errHandler={() => {err_indicator += 1}}
         /></div>);
+
+        expect(err_indicator).toBe(0);
 
         const table_wrapper = container.firstChild.firstChild;
         const header_row = table_wrapper.childNodes[0];
@@ -172,15 +189,19 @@ describe("Component tests", () => {
             expect(add_form_rows[i].childNodes[1].className).toBe("form_input_container");
             expect(add_form_rows[i].childNodes[1].firstChild.className).toBe("form_input");
             expect(add_form_rows[i].childNodes[1].firstChild.type).toBe("text");
+
+            fireEvent.change(add_form_rows[i].childNodes[1].firstChild, {target: {value: "42"}});
         }
 
         expect(add_form_rows[7].firstChild.className).toBe("submit_button");
         expect(add_form_rows[7].firstChild.textContent).toBe("Create user entry");
 
+        fireEvent.click(add_form_rows[7].firstChild);
+
         const table = main_row.firstChild;
 
         expect(table.className).toBe("table");
-        expect(table.childNodes.length).toBe(2);
+        expect(table.childNodes.length).toBe(3);
 
         const overlay = table.firstChild;
 
@@ -190,5 +211,26 @@ describe("Component tests", () => {
         const table_header = table.childNodes[1];
 
         expect(table_header.className).toBe("table_header_row");
+
+        const table_data = table.childNodes[2];
+
+        expect(table_data.className).toBe("table_row");
+        expect(table_data.childNodes.length).toBe(5);
+
+        for (let i = 0; i < 5; i++) {
+            expect(table_data.childNodes[i].className).toBe("table_data");
+        }
+
+        expect(table_data.childNodes[0].textContent).toBe("test");
+        expect(table_data.childNodes[1].textContent).toBe("Name A");
+        expect(table_data.childNodes[2].textContent).toBe("12367");
+        expect(table_data.childNodes[3].textContent).toBe("50");
+        expect(table_data.childNodes[4].textContent).toBe("10");
+
+        fireEvent.click(table_data.childNodes[0]);
+        fireEvent.click(table_data.childNodes[1]);
+        fireEvent.click(table_data.childNodes[2]);
+        fireEvent.click(table_data.childNodes[3]);
+        fireEvent.click(table_data.childNodes[4]);
     });
 });
