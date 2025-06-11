@@ -15,8 +15,8 @@ function AddForm(props) {
         ["password", "", "Password", (output) => {setPassword(output)}],
         ["name", "", "Full Name", (output) => {setName(output)}],
         ["balance", 0, "Balance", (output) => {setBalance(output)}],
-        ["reputationSeller", 0, "Salesman reputation", (output) => {setRepB(output)}],
-        ["reputationBuyer", 0, "Buyer reputation", (output) => {setRepS(output)}],
+        ["reputationSeller", 0, "Salesman reputation", (output) => {setRepS(output)}],
+        ["reputationBuyer", 0, "Buyer reputation", (output) => {setRepB(output)}],
     ];
 
     const submit_user = useCallback(async () => {

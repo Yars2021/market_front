@@ -4,7 +4,7 @@ import UsersTable from "./components/UsersTable";
 function App() {
     return (
         <div className={"main_page"}>
-            <UsersTable url={"http://localhost:8080/users"} initialTable={[]} errHandler={() => {}}/>
+            <UsersTable url={process.env.REACT_APP_API_URL + "/users"} initialTable={[]} errHandler={() => {}}/>
         </div>
     );
 }
