@@ -70,6 +70,8 @@ jobs:
       - run: npm run test:coverage
 
   sonarqube:
+      needs: coverage
+  
       name: SonarQube
       runs-on: ubuntu-latest
       steps:
