@@ -87,7 +87,7 @@ jobs:
         run: npm run build --if-present
 
       - name: Test and coverage
-        run: npm run test:coverage
+        run: npm run test:coverage > report.log 2> errors.log
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@master
