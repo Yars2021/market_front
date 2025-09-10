@@ -17,7 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:coverage": "CI=true react-scripts test --env=jsdom --watchAll=false --coverage --collectCoverageFrom=src/components/*.js > report",
+    "test:coverage": "CI=true react-scripts test --env=jsdom --watchAll=false --coverage --collectCoverageFrom=src/components/*.js --testResultsProcessor=jest-sonar-reporter > report",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
