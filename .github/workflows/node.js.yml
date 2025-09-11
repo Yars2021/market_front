@@ -72,6 +72,8 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   push_dockerhub:
+    needs: sonarqube
+  
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
