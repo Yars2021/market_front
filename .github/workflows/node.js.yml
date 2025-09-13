@@ -17,7 +17,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Use Node.js ${{ matrix.node-version }}
+      id: node_build
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
@@ -25,17 +27,38 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
 
+    - name: Build tg message success
+      if: steps.node_build.outcome == 'success'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_DST }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          **Market frontend:**
+          Commit ${{ github.event.commits[0].message }} by ${{ github.actor }} was built successfully!
+
+    - name: Build tg message fail
+      if: steps.node_build.outcome != 'success'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_DST }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          **Market frontend:**
+          Build failed for commit ${{ github.event.commits[0].message }} by ${{ github.actor }}!
+
   test:
     needs: build
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Use Node.js ${{ matrix.node-version }}
+      id: node_test
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
@@ -43,6 +66,26 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+
+    - name: Test tg message success
+      if: steps.node_test.outcome == 'success'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_DST }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          **Market frontend:**
+          Commit ${{ github.event.commits[0].message }} by ${{ github.actor }} was tested successfully!
+
+    - name: Test tg message fail
+      if: steps.node_test.outcome != 'success'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_DST }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          **Market frontend:**
+          Unit tests failed for commit ${{ github.event.commits[0].message }} by ${{ github.actor }}!
 
   sonarqube:
     name: sonarqube
@@ -66,10 +109,31 @@ jobs:
         run: npm run test:coverage
 
       - name: SonarQube Scan
+        id: sonarqube_scan
         uses: SonarSource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Sonarqube tg message success
+        if: steps.sonarqube_scan.outcome == 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_DST }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            **Market frontend:**
+            Commit ${{ github.event.commits[0].message }} by ${{ github.actor }} was analyzed with Sonarqube successfully!
+  
+      - name: Test tg message fail
+        if: steps.sonarqube_scan.outcome != 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_DST }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            **Market frontend:**
+            Sonarqube analysis failed for commit ${{ github.event.commits[0].message }} by ${{ github.actor }}!
 
   push_dockerhub:
     needs: sonarqube
@@ -92,9 +156,30 @@ jobs:
           images: yars20240201/market_frontend
 
       - name: Build and push Docker image
+        id: dockerhub_push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Dockerhub tg message success
+        if: steps.dockerhub_push.outcome == 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_DST }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Market frontend:
+            Commit "${{ github.event.commits[0].message }}" by ${{ github.actor }} was pushed to dockerhub as a docker image!
+  
+      - name: Dockerhub tg message fail
+        if: steps.dockerhub_push.outcome != 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_DST }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Market frontend:
+            Docker image build failed for commit "${{ github.event.commits[0].message }}" by ${{ github.actor }}!
