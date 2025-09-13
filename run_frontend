@@ -1,0 +1,12 @@
+#!/bin/sh
+
+IMAGE=`docker ps | grep 'market_frontend' | awk -F' ' '{ print $1 }' | tail -n 1`
+
+if [ "$IMAGE" = "" ]; then
+    echo 'Nothing to stop'
+else
+    docker stop $IMAGE
+fi
+
+docker pull yars20240201/market_frontend:main
+docker run -p 80:3000 --rm -d -e REACT_APP_API_URL="http://${{ secrets.SSH_HOST }}:8080" yars20240201/market_frontend:main
