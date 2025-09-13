@@ -183,3 +183,39 @@ jobs:
           message: |
             Market frontend:
             Docker image build failed for commit "${{ github.event.commits[0].message }}" by ${{ github.actor }}!
+
+  deploy_to_vk:
+    needs: push_dockerhub
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to remote
+        id: deploy_vk
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: altlinux
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            /home/altlinux/scripts/run_frontend
+
+      - name: VK deploy
+        if: steps.deploy_vk.outcome == 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_DST }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Market frontend:
+            New image was successfully deployed. The applicaation is available at ${{ secrets.SSH_HOST }}!
+
+      - name: VK deploy
+        if: steps.deploy_vk.outcome != 'success'
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_DST }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Market frontend:
+            New image was deployment failed!
