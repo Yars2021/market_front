@@ -29,6 +29,9 @@ function UsersTable(props) {
     return (
         <div className={"table_container"}>
             <div className={"table_container_row"}>
+                Application header
+            </div>
+            <div className={"table_container_row"}>
                 <AddForm
                     url={props.url}
                     onSubmit={() => {setRefresh(!refresh)}}
