@@ -1,6 +1,6 @@
 import './App.css';
 import UsersTable from "./components/UsersTable";
-п
+
 function App() {
     return (
         <div className={"main_page"}>
